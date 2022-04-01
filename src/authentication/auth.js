@@ -1,5 +1,6 @@
 import { ethers } from "ethers";
 
+
 export const connectToWallet = async () => {
     if (window.ethereum) {
       try {
@@ -27,11 +28,13 @@ export const connectToWallet = async () => {
 
 
 export const getAccounts = async()=>{
+
   if(window.ethereum){
     const provider = new ethers.providers.Web3Provider(window.ethereum);
     const accounts = await provider.listAccounts();
-    console.log(accounts[0]);
-    localStorage.setItem("address", accounts[0]);
-    localStorage.setItem("wallet", "");
-  }
+    const address = accounts[0]
+    console.log(address , accounts[0])
+    return address;
+    }
+  return "install wallet";
 }

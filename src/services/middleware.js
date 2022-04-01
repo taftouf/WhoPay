@@ -1,10 +1,12 @@
 import { Navigate } from "react-router-dom";
 import {ethers} from "ethers";
-import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 
 
 function Middleware({children}){
-    if(ethers.utils.isAddress(localStorage.getItem("address"))){
+    const address = useSelector((state)=>state.user.address);
+
+    if(ethers.utils.isAddress(address)){
         return children;
     }else{        
         return <Navigate to={"/"} />;

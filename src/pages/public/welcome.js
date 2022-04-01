@@ -1,17 +1,21 @@
 import React, { useEffect,  } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { connect } from '../../store/userSlice';
 import {ethers} from "ethers";
 import { getAccounts } from '../../authentication/auth';
 
-const Welcome = ({isLoading}) =>{
+
+
+const Welcome = () =>{
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    const user = useSelector((state)=>state.user);
 
     useEffect(async()=>{
-      await getAccounts();
-      if(ethers.utils.isAddress(localStorage.getItem("address"))){
+      console.log(user);
+      await getAccounts(user.address);
+      if(ethers.utils.isAddress(user.address)){
         navigate("/dashboard");
       }
     }, [])
@@ -19,7 +23,7 @@ const Welcome = ({isLoading}) =>{
     const connectWallet = async()=>{
       await dispatch(connect());
       getAccounts();
-      if(ethers.utils.isAddress(localStorage.getItem('address'))){
+      if(ethers.utils.isAddress(user.address)){
         navigate("/dashboard");
       }
     }
@@ -39,7 +43,7 @@ const Welcome = ({isLoading}) =>{
               </button>
             </a>
           :
-            (isLoading 
+            (user.isLoading 
               ?
                 <button 
                   className="mt-10 w-full py-3 rounded-xl border border-purple-600 text-purple-600 cursor-not-allowed">
@@ -55,7 +59,7 @@ const Welcome = ({isLoading}) =>{
                 )
             )
           }
-          <p className="text-sm font-light mt-5 leading-7 text-purple-600"> {localStorage.getItem("message")}</p>
+          <p className="text-sm font-light mt-5 leading-7 text-purple-600"> {user.status}</p>
         </div>
       </div>
     </div>

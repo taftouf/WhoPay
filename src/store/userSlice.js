@@ -12,7 +12,19 @@ export const connect = createAsyncThunk('', async(_,thunkAPI)=>{
 })
 const userSlice = createSlice({
     name:'user',
-    initialState: {address:null, status:false, isLoading:false},
+    initialState: {address:null, status:"", isLoading:false, provider: null},
+    reducers: {
+        changeAddress: (state, action) => {
+            state.address = action.payload
+        },
+        initStatus: (state)=>
+        {
+            state.status = ""
+        },
+        getProvider: (state, action)=>{
+            console.log("getProvider")
+        }
+    },
     extraReducers:{
         [connect.pending]:(state, action)=>{
             console.log(action);
@@ -20,22 +32,18 @@ const userSlice = createSlice({
         },
         [connect.fulfilled]:(state, action)=>{
             console.log(action.payload.status, action.payload.address);
-            state.status= true;
+            state.status= action.payload.status;
             state.isLoading=false;
             state.address= action.payload.address;
-            localStorage.setItem("address", action.payload.address);
-            localStorage.setItem("message", action.payload.status);
         },
         [connect.rejected]:(state, action)=>{
             console.log(action);
-            state.status= false;
+            state.status= action.payload.status;
             state.isLoading=false;
             state.address= null;
-            localStorage.setItem("address", null);
-            localStorage.setItem("message", action.payload.status)
         },
     }
 });
 
-
+export const {pending, fulfilled, rejected, changeAddress, initStatus} = userSlice.actions;
 export default userSlice.reducer;
